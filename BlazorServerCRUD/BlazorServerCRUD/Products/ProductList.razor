@@ -20,11 +20,11 @@
 
 @if(_products.Count() <= 0)
 {
-    <p>No products available</p>
+    <p class="mt-2">No products available</p>
 }
 else
 {
-    <div class="row">
+    <div class="row mt-2">
         @foreach(var product in _products)
         {
             <div class="card">
