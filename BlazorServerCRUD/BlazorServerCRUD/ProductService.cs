@@ -15,31 +15,49 @@ namespace BlazorServerCRUD
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
             using var context = await _dbContextFactory.CreateDbContextAsync();
-            return await context.products.ToListAsync();
+            return await context.Products.ToListAsync();
         }
 
         public async Task<Product?> GetProductByIdAsync(int id)
         {
             using var context = await _dbContextFactory.CreateDbContextAsync();
-            return await context.products.FirstOrDefaultAsync(x => x.Id == id);
+            return await context.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Product?> UpdateProductAsync(Product updateProduct)
         {
             using var context = await _dbContextFactory.CreateDbContextAsync();
-            var existingProduct = await context.products
+            var existProduct = await context.Products
                 .FirstOrDefaultAsync(x => x.Id == updateProduct.Id);
 
-            if (existingProduct is not null)
+            if(existProduct is not null)
             {
-                existingProduct.Name = updateProduct.Name;
-                existingProduct.Price = updateProduct.Price;
+                existProduct.Name = updateProduct.Name;
+                existProduct.Price = updateProduct.Price;
                 await context.SaveChangesAsync();
-                return existingProduct;
+                return existProduct;
             }
             return null;
         }
 
+        public async Task DeleteProductAsync(int id)
+        {
+            using var context = await _dbContextFactory.CreateDbContextAsync();
+            var existingProduct = await context.Products
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if(existingProduct is not null)
+            {
+                context.Products.Remove(existingProduct);
+                await context.SaveChangesAsync();
+            }
+        }
 
+        public async Task<Product> AddProductAsync(Product product)
+        {
+            using var context = _dbContextFactory.CreateDbContext();
+            context.Products.Add(product);
+            await context.SaveChangesAsync();
+            return product;
+        }
     }
 }

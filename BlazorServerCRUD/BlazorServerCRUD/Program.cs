@@ -1,3 +1,4 @@
+using BlazorServerCRUD;
 using BlazorServerCRUD.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -10,12 +11,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
-
 var cs = builder.Configuration.GetConnectionString("Default");
-builder.Services.AddDbContextFactory<AppDbContext>(option =>
+builder.Services.AddDbContextFactory<AppDbContext>(options =>
 {
-    option.UseSqlServer(cs);
+    options.UseSqlServer(cs);
 });
+
+builder.Services.AddScoped<ProductService>();
 
 
 var app = builder.Build();
